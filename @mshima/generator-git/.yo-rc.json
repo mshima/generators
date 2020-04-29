@@ -1,0 +1,49 @@
+{
+  "@mshima/generator-author": {
+    "email": "marceloshima@gmail.com",
+    "name": "Marcelo Shima",
+    "url": "https://github.com/mshima"
+  },
+  "@mshima/generator-generator": {
+    ":generator": {
+      "#app": {
+        "className": "AppGenerator",
+        "files": [
+          ".gitignore"
+        ],
+        "name": "app",
+        "yeomanEnvironmentVersion": "2.10.2"
+      }
+    },
+    "packageNamespace": "git",
+    "yeomanEnvironmentVersion": "2.10.2",
+    "yeomanGeneratorVersion": "4.10.0",
+    "yeomanTestVersion": "2.5.0"
+  },
+  "@mshima/generator-license": {
+    "disableLicenseFileGeneration": true,
+    "license": "MIT"
+  },
+  "@mshima/generator-mocha": {
+    ":generator": {
+      "#app": {
+        "name": "app",
+        "packageNamespace": "git"
+      }
+    }
+  },
+  "@mshima/generator-node-package": {
+    "disableReadme": true,
+    "enableGenerator": true,
+    "enableMocha": true
+  },
+  "@mshima/generator-package-json": {
+    "description": "",
+    "homepage": "https://github.com/mshima/generators",
+    "keywords": [
+      "yeoman-generator"
+    ],
+    "name": "generator-git",
+    "scope": "mshima"
+  }
+}

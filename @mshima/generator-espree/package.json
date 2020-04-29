@@ -1,0 +1,24 @@
+{
+  "name": "@mshima/generator-espree",
+  "version": "0.0.0",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/mshima/generators",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "files": [
+    "generators"
+  ],
+  "dependencies": {
+    "espree": "^6.2.1"
+  },
+  "scripts": {
+    "fix": "xo --fix",
+    "pretest": "xo"
+  }
+}

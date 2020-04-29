@@ -1,0 +1,31 @@
+{
+  "name": "@mshima/generator-json",
+  "version": "0.0.0",
+  "description": "Generator for ordered json files",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/mshima/generators",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "files": [
+    "generators"
+  ],
+  "main": "generators/app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mshima/generators.git"
+  },
+  "scripts": {
+    "fix": "xo --fix",
+    "pretest": "xo",
+    "test": "mocha"
+  },
+  "bugs": {
+    "url": "https://github.com/mshima/generators/issues"
+  }
+}

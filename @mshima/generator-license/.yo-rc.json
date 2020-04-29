@@ -1,0 +1,49 @@
+{
+  "@mshima/generator-author": {
+    "email": "marceloshima@gmail.com",
+    "name": "Marcelo Shima",
+    "url": "https://github.com/mshima"
+  },
+  "@mshima/generator-generator": {
+    ":generator": {
+      "#app": {
+        "name": "app",
+        "yeomanEnvironmentVersion": "2.10.2"
+      }
+    },
+    "packageNamespace": "license",
+    "yeomanEnvironmentVersion": "2.10.2",
+    "yeomanTestVersion": "2.5.0"
+  },
+  "@mshima/generator-license": {
+    "disableLicenseFileGeneration": true,
+    "license": "MIT",
+    "previousCopyrightsHolders": [
+      "Copyright (c) 2013-2014 Jozef Izso"
+    ]
+  },
+  "@mshima/generator-mocha": {
+    ":generator": {
+      "#app": {
+        "name": "app"
+      }
+    },
+    "name": "app",
+    "packageNamespace": "license"
+  },
+  "@mshima/generator-node-package": {
+    "disableReadme": true,
+    "enableGenerator": true,
+    "enableLicense": true,
+    "enableMocha": true
+  },
+  "@mshima/generator-package-json": {
+    "description": "License generator for Yeoman based projects.",
+    "homepage": "https://github.com/mshima/generators",
+    "keywords": [
+      "yeoman-generator"
+    ],
+    "name": "generator-license",
+    "scope": "mshima"
+  }
+}

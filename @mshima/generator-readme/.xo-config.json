@@ -1,0 +1,4 @@
+{
+    "space": true,
+    "envs": ["es2020", "node", "mocha"]
+}

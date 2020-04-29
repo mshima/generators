@@ -1,0 +1,23 @@
+{
+  "name": "@mshima/generator-git",
+  "version": "0.0.0",
+  "description": "Git utilitity for generators",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/mshima/generators",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "files": [
+    "generators"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "fix": "xo --fix",
+    "pretest": "xo"
+  }
+}

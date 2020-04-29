@@ -1,0 +1,25 @@
+{
+  "name": "@mshima/generator-menu",
+  "version": "0.0.0",
+  "description": "Generator main menu utility",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/mshima/generators",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "files": [
+    "generators"
+  ],
+  "dependencies": {
+    "execa": "^4.0.0"
+  },
+  "scripts": {
+    "fix": "xo --fix",
+    "pretest": "xo"
+  }
+}

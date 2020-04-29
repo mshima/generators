@@ -1,0 +1,66 @@
+{
+  "@mshima/generator-author": {
+    "email": "marceloshima@gmail.com",
+    "name": "Marcelo Shima",
+    "url": "https://github.com/mshima"
+  },
+  "@mshima/generator-lerna": {
+    ":package": {
+      "#generator-author": {
+        "name": "generator-author"
+      },
+      "#generator-espree": {
+        "name": "generator-espree"
+      },
+      "#generator-generator": {
+        "name": "generator-generator"
+      },
+      "#generator-git": {
+        "name": "generator-git"
+      },
+      "#generator-github": {
+        "name": "generator-github"
+      },
+      "#generator-json": {
+        "name": "generator-json"
+      },
+      "#generator-lerna": {
+        "name": "generator-lerna"
+      },
+      "#generator-license": {
+        "name": "generator-license"
+      },
+      "#generator-menu": {
+        "name": "generator-menu"
+      },
+      "#generator-mocha": {
+        "name": "generator-mocha"
+      },
+      "#generator-node-package": {
+        "name": "generator-node-package"
+      },
+      "#generator-package-json": {
+        "name": "generator-package-json"
+      },
+      "#generator-readme": {
+        "name": "generator-readme"
+      },
+      "#generator-xo": {
+        "name": "generator-xo"
+      }
+    }
+  },
+  "@mshima/generator-license": {
+    "license": "MIT"
+  },
+  "@mshima/generator-package-json": {
+    "description": "",
+    "homepage": "https://github.com/mshima/generators",
+    "keywords": [
+      "yeoman-generator"
+    ],
+    "name": "generators",
+    "scope": "mshima",
+    "skipPackageJsonGeneration": true
+  }
+}
