@@ -1,5 +1,5 @@
 function createGenerator(env) {
-  return class GithubAppGenerator extends env.requireGenerator() {
+  return class GithubAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

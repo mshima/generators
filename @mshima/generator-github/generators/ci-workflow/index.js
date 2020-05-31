@@ -1,5 +1,5 @@
 function createGenerator(env) {
-  return class GithubCiWorkflowGenerator extends env.requireGenerator() {
+  return class GithubCiWorkflowGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

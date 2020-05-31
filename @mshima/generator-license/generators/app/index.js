@@ -15,7 +15,7 @@ const licenses = [
 ];
 
 function createGenerator(env) {
-  return class LicenseGenerator extends env.requireGenerator() {
+  return class LicenseGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

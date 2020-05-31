@@ -1,7 +1,7 @@
 const path = require('path');
 
 function createGenerator(env) {
-  return class LernaPackageGenerator extends env.requireGenerator() {
+  return class LernaPackageGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

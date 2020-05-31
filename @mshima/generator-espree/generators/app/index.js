@@ -89,7 +89,7 @@ const findNode = function (node, propetyNameOrType, nameOrLog, equalsValue) {
 };
 
 function createGenerator(env) {
-  return class EspreeAppGenerator extends env.requireGenerator() {
+  return class EspreeAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

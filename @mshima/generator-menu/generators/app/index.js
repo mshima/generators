@@ -1,10 +1,11 @@
 const execa = require('execa');
 
 function createGenerator(env) {
-  return class AppGenerator extends env.requireGenerator() {
+  return class AppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');
+      this.compose = this.options.compose;
       if (!this.compose) {
         throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
       }

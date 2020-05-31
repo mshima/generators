@@ -1,6 +1,7 @@
 {
   "name": "root",
   "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1",
     "@mshima/generator-espree": "file:@mshima/generator-espree",
     "@mshima/generator-generator": "file:@mshima/generator-generator",
     "@mshima/generator-git": "file:@mshima/generator-git",

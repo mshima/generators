@@ -17,7 +17,7 @@ const PROMPTS = [
 ];
 
 function createGenerator(env) {
-  return class AuthorAppGenerator extends env.requireGenerator() {
+  return class AuthorAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

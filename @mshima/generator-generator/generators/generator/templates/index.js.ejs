@@ -1,5 +1,5 @@
 function createGenerator(env) {
-  return class <%= className %>Generator extends env.requireGenerator() {
+  return class <%= className %>Generator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('<%= yeomanEnvironmentVersion %>');

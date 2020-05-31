@@ -1,7 +1,7 @@
 const {install} = require('pkg-install');
 
 function createGenerator(env) {
-  return class NodePackageAppGenerator extends env.requireGenerator() {
+  return class NodePackageAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

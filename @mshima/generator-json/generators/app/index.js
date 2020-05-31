@@ -33,7 +33,7 @@ function mergeDeep(template, source, dest = _.cloneDeep(template)) {
 }
 
 function createGenerator(env) {
-  return class JsonAppGenerator extends env.requireGenerator() {
+  return class JsonAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');

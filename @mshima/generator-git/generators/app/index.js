@@ -14,7 +14,7 @@ const DETECT = {
 };
 
 function createGenerator(env) {
-  return class GitAppGenerator extends env.requireGenerator() {
+  return class GitAppGenerator extends require('@mshima/generator') {
     constructor(args, options) {
       super(args, options);
       this.checkEnvironmentVersion('2.10.2');
