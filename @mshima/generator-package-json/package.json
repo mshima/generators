@@ -25,9 +25,9 @@
     "lodash": "^4.17.15"
   },
   "peerDependencies": {
-    "@mshima/generator-author": "0.0.4",
-    "@mshima/generator-json": "0.0.4",
-    "@mshima/generator-license": "0.0.4"
+    "@mshima/generator-author": "0.0.5",
+    "@mshima/generator-json": "0.0.5",
+    "@mshima/generator-license": "0.0.5"
   },
   "scripts": {
     "fix": "xo --fix",

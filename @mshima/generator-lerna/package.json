@@ -19,13 +19,13 @@
     "@mshima/generator": "^5.0.0-beta.1"
   },
   "peerDependencies": {
-    "@mshima/generator-git": "0.0.4",
-    "@mshima/generator-json": "0.0.4",
-    "@mshima/generator-license": "0.0.4",
-    "@mshima/generator-menu": "0.0.4",
-    "@mshima/generator-node-package": "0.0.4",
-    "@mshima/generator-package-json": "0.0.4",
-    "@mshima/generator-readme": "0.0.4"
+    "@mshima/generator-git": "0.0.5",
+    "@mshima/generator-json": "0.0.5",
+    "@mshima/generator-license": "0.0.5",
+    "@mshima/generator-menu": "0.0.5",
+    "@mshima/generator-node-package": "0.0.5",
+    "@mshima/generator-package-json": "0.0.5",
+    "@mshima/generator-readme": "0.0.5"
   },
   "scripts": {
     "fix": "xo --fix",

@@ -23,8 +23,8 @@
     "@mshima/generator": "^5.0.0-beta.1"
   },
   "peerDependencies": {
-    "@mshima/generator-menu": "0.0.4",
-    "@mshima/generator-package-json": "0.0.4"
+    "@mshima/generator-menu": "0.0.5",
+    "@mshima/generator-package-json": "0.0.5"
   },
   "scripts": {
     "fix": "xo --fix",
