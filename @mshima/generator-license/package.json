@@ -19,7 +19,7 @@
     "@mshima/generator": "^5.0.0-beta.1"
   },
   "peerDependencies": {
-    "@mshima/generator-author": "0.0.3"
+    "@mshima/generator-author": "0.0.4"
   },
   "scripts": {
     "fix": "xo --fix",
