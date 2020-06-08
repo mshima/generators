@@ -20,6 +20,7 @@
     "url": "git+https://github.com/mshima/generators.git"
   },
   "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1",
     "chalk": "2.4.1",
     "lodash": "^4.17.15"
   },

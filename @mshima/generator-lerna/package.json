@@ -15,6 +15,9 @@
   "files": [
     "generators"
   ],
+  "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1"
+  },
   "peerDependencies": {
     "@mshima/generator-git": "0.0.2",
     "@mshima/generator-json": "0.0.2",

@@ -16,6 +16,7 @@
     "generators"
   ],
   "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1",
     "execa": "^4.0.0"
   },
   "scripts": {

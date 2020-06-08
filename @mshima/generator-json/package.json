@@ -15,7 +15,6 @@
   "files": [
     "generators"
   ],
-  "main": "generators/app/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mshima/generators.git"
@@ -29,6 +28,7 @@
     "url": "https://github.com/mshima/generators/issues"
   },
   "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1",
     "lodash": "^4.17.15"
   }
 }

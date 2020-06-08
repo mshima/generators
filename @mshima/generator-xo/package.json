@@ -12,6 +12,9 @@
     "email": "marceloshima@gmail.com",
     "url": "https://github.com/mshima"
   },
+  "dependencies": {
+    "@mshima/generator": "^5.0.0-beta.1"
+  },
   "files": [
     "generators"
   ],
