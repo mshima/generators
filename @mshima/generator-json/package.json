@@ -1,6 +1,6 @@
 {
   "name": "@mshima/generator-json",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Generator for ordered json files",
   "keywords": [
     "yeoman-generator"

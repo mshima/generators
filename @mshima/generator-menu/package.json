@@ -1,6 +1,6 @@
 {
   "name": "@mshima/generator-menu",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Generator main menu utility",
   "keywords": [
     "yeoman-generator"
