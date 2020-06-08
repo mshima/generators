@@ -19,13 +19,13 @@
     "pkg-install": "^1.0.0"
   },
   "peerDependencies": {
-    "@mshima/generator-generator": "0.0.2",
-    "@mshima/generator-git": "0.0.2",
-    "@mshima/generator-json": "0.0.2",
-    "@mshima/generator-menu": "0.0.2",
-    "@mshima/generator-mocha": "0.0.2",
-    "@mshima/generator-package-json": "0.0.2",
-    "@mshima/generator-xo": "0.0.2"
+    "@mshima/generator-generator": "0.0.3",
+    "@mshima/generator-git": "0.0.3",
+    "@mshima/generator-json": "0.0.3",
+    "@mshima/generator-menu": "0.0.3",
+    "@mshima/generator-mocha": "0.0.3",
+    "@mshima/generator-package-json": "0.0.3",
+    "@mshima/generator-xo": "0.0.3"
   },
   "scripts": {
     "fix": "xo --fix",
