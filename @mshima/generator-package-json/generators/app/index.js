@@ -86,6 +86,9 @@ function createGenerator(env) {
         },
         authorApp() {
           return this.compose.with('@mshima/author:app');
+        },
+        licenseApp() {
+          return this.compose.with('@mshima/license:app');
         }
       };
     }
