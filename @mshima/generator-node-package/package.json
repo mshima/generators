@@ -1,6 +1,6 @@
 {
   "name": "@mshima/generator-node-package",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "keywords": [
     "yeoman-generator"
   ],

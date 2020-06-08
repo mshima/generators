@@ -1,6 +1,6 @@
 {
   "name": "@mshima/generator-mocha",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Generator for mocha files",
   "keywords": [
     "yeoman-generator"
