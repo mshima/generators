@@ -21,8 +21,8 @@
     "url": "git+https://github.com/mshima/generators.git"
   },
   "peerDependencies": {
-    "@mshima/generator-menu": "0.0.0",
-    "@mshima/generator-package-json": "0.0.0"
+    "@mshima/generator-menu": "0.0.2",
+    "@mshima/generator-package-json": "0.0.2"
   },
   "scripts": {
     "fix": "xo --fix",

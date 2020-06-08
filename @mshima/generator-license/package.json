@@ -16,7 +16,7 @@
     "generators"
   ],
   "peerDependencies": {
-    "@mshima/generator-author": "0.0.0"
+    "@mshima/generator-author": "0.0.2"
   },
   "scripts": {
     "fix": "xo --fix",
