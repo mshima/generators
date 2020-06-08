@@ -1,6 +1,6 @@
 {
   "name": "@mshima/generator-generator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generator to create yeoman generator",
   "keywords": [
     "yeoman-generator"
