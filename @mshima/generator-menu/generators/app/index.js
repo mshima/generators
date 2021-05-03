@@ -1,16 +1,22 @@
 const execa = require('execa');
 
-function createGenerator(env) {
-  return class AppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class AppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
       this.compose = this.options.compose;
       if (!this.compose) {
         throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
       }
 
       this.choices = [];
+
+      if (!this.compose.shared.menuStack) {
+        this.compose.shared.menuStack = [this.options.generatorApi];
+      }
+
+      this.menuStack = this.compose.shared.menuStack;
     }
 
     get initializing() {
@@ -27,11 +33,14 @@ function createGenerator(env) {
           this.compose = this.env.createCompose(this.destinationRoot());
         },
         setMenuStack() {
-          if (!this.compose.shared.menuStack) {
-            this.compose.shared.menuStack = [this.options.generatorApi];
-          }
+        }
+      };
+    }
 
-          this.menuStack = this.compose.shared.menuStack;
+    get mainMenu() {
+      return {
+        mainMenu() {
+          this._queueMainMenu();
         }
       };
     }
@@ -127,16 +136,9 @@ function createGenerator(env) {
         choices: [namespacePrompt, execPrompt].concat(this.choices).concat({name: 'Exit', value: null}),
         message: 'Select an action.',
         pageSize: this.choices.length + 3
-      }).then(answers => {
+      }).then(async answers => {
         if (typeof answers.menu === 'function') {
-          const promise = answers.menu();
-          if (promise instanceof Promise) {
-            promise.then(() => this._showCurrentMainMenu());
-          } else {
-            this._showCurrentMainMenu();
-          }
-
-          return promise;
+          return Promise.resolve(answers.menu()).then(() => this._showCurrentMainMenu());
         }
 
         this.menuStack.pop();
@@ -159,20 +161,25 @@ function createGenerator(env) {
       console.log('===============================================');
     }
 
-    '#push'() {
-      this.menuStack.push(this.options.generatorApi);
-    }
+    get composeApi() {
+      const self = this;
+      return {
+        push() {
+          self.menuStack.push(self.options.generatorApi);
+        },
 
-    '#runCommand'(command) {
-      return this._runCommand(command);
-    }
+        runCommand(command) {
+          return self._runCommand(command);
+        },
 
-    '#showMainMenu'() {
-      this._queueMainMenu();
-    }
+        showMainMenu() {
+          self._queueMainMenu();
+        },
 
-    '#registerMenu'() {
-      this._registerMenu(...arguments);
+        registerMenu() {
+          self._registerMenu(...arguments);
+        }
+      };
     }
   };
 }

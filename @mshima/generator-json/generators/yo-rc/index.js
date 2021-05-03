@@ -1,8 +1,8 @@
 function createGenerator(env) {
   return class JsonYoRcGenerator extends env.requireGenerator('@mshima/json:app') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
     }
 
     get initializing() {

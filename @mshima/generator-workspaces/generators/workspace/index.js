@@ -1,10 +1,9 @@
 const path = require('path');
 
-function createGenerator(env) {
-  return class LernaPackageGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class WorkspaceGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {unique: 'argument', ...features});
 
       this.argument('name', {
         type: String,
@@ -12,11 +11,15 @@ function createGenerator(env) {
         description: 'Package name'
       });
 
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
       this.instanceConfig.defaults({
         name: this.options.name
       });
-
-      this.childId = `@mshima/lerna:child#${this.options.name}`;
     }
 
     get initializing() {
@@ -49,7 +52,7 @@ function createGenerator(env) {
           });
         },
         nodePackage() {
-          return this.childContext.with('@mshima/lerna:child', {parentCompose: this.compose, lernaPackageName: this.options.name});
+          // Return this.childContext.with('@mshima/workspaces:child', {parentCompose: this.compose, workspaceName: this.options.name});
         }
       };
     }
@@ -60,6 +63,26 @@ function createGenerator(env) {
 
     get writing() {
       return {};
+    }
+
+    get postWriting() {
+      return {
+        async packageJson() {
+          console.log('package json' + this.instanceConfig);
+          const packageJsonGenerator = await this.compose.get('@mshima/package-json:app');
+
+          this.packageJson.defaults({workspaces: []});
+          let workspaceName = this.instanceConfig.get('name');
+          const scope = packageJsonGenerator.getScope();
+          if (scope) {
+            workspaceName = `@${scope}/${workspaceName}`;
+          }
+          const workspaces = this.packageJson.get('workspaces');
+          if (!workspaces.includes(workspaceName)) {
+            this.packageJson.set('workspaces', workspaces.concat([workspaceName]));
+          }
+        }
+      };
     }
 
     get install() {
@@ -75,7 +98,7 @@ function createGenerator(env) {
         const {scope} = this.compose.getConfig('@mshima/package-json');
         const folder = scope ? `@${scope}` : 'packages';
         const destinationRoot = path.join(this.destinationPath(folder, this.options.name));
-        this._childContext = this.compose.createChild(this.childId, destinationRoot);
+        // This._childContext = this.compose.createChild(this.childId, destinationRoot);
       }
 
       return this._childContext;

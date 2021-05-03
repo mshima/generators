@@ -1,10 +1,10 @@
 const {install} = require('pkg-install');
 
-function createGenerator(env) {
-  return class NodePackageAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class NodePackageAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
 
       const {disableLicense, disableReadme} = this.options;
       this.config.defaults({disableLicense, disableReadme});
@@ -24,16 +24,25 @@ function createGenerator(env) {
           this.compose = this.env.createCompose(this.destinationRoot());
         },
         mainMenu() {
-          if (this.env._rootGenerator === this) {
-            // Queue main menu
-            return this.compose.with('@mshima/menu:app+showMainMenu');
-          }
+          return this.compose.with('@mshima/menu:app');
         }
       };
     }
 
     get prompting() {
       return {
+        enableGit() {
+          if (this.storage.enableGit) {
+            return;
+          }
+
+          this.compose.once('@mshima/menu:app', generatorApi => {
+            generatorApi.registerMenu('Enable git', () => {
+              this.storage.enableGit = true;
+              return this.compose.with('@mshima/git:app');
+            });
+          });
+        },
         enableMocha() {
           if (this.config.get('enableMocha')) {
             return;
@@ -43,18 +52,6 @@ function createGenerator(env) {
             generatorApi.registerMenu('Enable mocha', () => {
               this.config.set('enableMocha', true);
               return this.compose.with('@mshima/mocha:app');
-            });
-          });
-        },
-        enableGithub() {
-          if (this.config.get('enableGithub')) {
-            return;
-          }
-
-          this.compose.once('@mshima/menu:app', generatorApi => {
-            generatorApi.registerMenu('Enable github', () => {
-              this.config.set('enableGithub', true);
-              return this.compose.with('@mshima/github:app');
             });
           });
         },
@@ -98,6 +95,10 @@ function createGenerator(env) {
           return this.compose.with('@mshima/xo:app');
         },
         gitApp() {
+          if (!this.storage.enableGit) {
+            return;
+          }
+
           return this.compose.with('@mshima/git:app');
         },
         mochaApp() {
@@ -115,7 +116,7 @@ function createGenerator(env) {
           return this.compose.with('@mshima/github:app');
         },
         generatorApp() {
-          if (!this.config.get('enableGenerator')) {
+          if (!this.storage.enableGenerator) {
             return;
           }
 
@@ -124,14 +125,9 @@ function createGenerator(env) {
         menu() {
           this.compose.once('@mshima/menu:app', generatorApi => {
             generatorApi.registerMenu(
-              'Override existing files',
+              'Regenerate existing files',
               () => {
-                const promise = this.compose.with('@mshima/generator:app+override');
-                if (this.config.get('enableMocha')) {
-                  return this.compose.with('@mshima/mocha:app+override');
-                }
-
-                return promise;
+                this.compose.emit('regenerate');
               }
             );
           });
@@ -160,23 +156,28 @@ function createGenerator(env) {
       return this.compose.with('@mshima/generator:app');
     }
 
-    '#install'() {
-      this.queueTask({
-        taskName: `npmInstall ${this.destinationPath()}`,
-        queueName: 'end',
-        method: () => {
-          console.log(`Running install at ${this.destinationRoot()}`);
-          return install({}, {stdout: 'pipe', cwd: this.destinationRoot()}).then(result => {
-            console.log(result.stdout);
+    get composeApi() {
+      const self = this;
+      return {
+        install() {
+          self.queueTask({
+            taskName: `npmInstall ${self.destinationPath()}`,
+            queueName: 'end',
+            method: () => {
+              console.log(`Running install at ${self.destinationRoot()}`);
+              return install({}, {stdout: 'pipe', cwd: self.destinationRoot()}).then(result => {
+                console.log(result.stdout);
+              });
+            },
+            run: false,
+            once: true
           });
         },
-        run: false,
-        once: true
-      });
-    }
 
-    '#enableGenerator'() {
-      return this._enableGenerator();
+        enableGenerator() {
+          return self._enableGenerator();
+        }
+      };
     }
   };
 }

@@ -6,24 +6,40 @@
     "@mshima/generator-generator": "file:@mshima/generator-generator",
     "@mshima/generator-git": "file:@mshima/generator-git",
     "@mshima/generator-json": "file:@mshima/generator-json",
-    "@mshima/generator-lerna": "file:@mshima/generator-lerna",
     "@mshima/generator-menu": "file:@mshima/generator-menu",
     "@mshima/generator-mocha": "file:@mshima/generator-mocha",
     "@mshima/generator-node-package": "file:@mshima/generator-node-package",
     "@mshima/generator-package-json": "file:@mshima/generator-package-json",
-    "@mshima/generator-xo": "file:@mshima/generator-xo"
+    "@mshima/generator-workspaces": "file:@mshima/generator-workspaces",
+    "@mshima/generator-xo": "file:@mshima/generator-xo",
+    "@mshima/yeoman-generator-defaults": "file:@mshima/yeoman-generator-defaults"
   },
   "devDependencies": {
     "fs-extra": "^9.0.0",
-    "lerna": "^3.20.2",
-    "mocha": "^7.1.2",
+    "mocha": "^8.3.2",
     "xo": "^0.30.0",
     "yeoman-assert": "^3.1.1",
-    "yeoman-environment": "^2.10.2",
-    "yeoman-test": "^2.6.0"
+    "yeoman-environment": "github:mshima/environment#fixes",
+    "yeoman-test": "^6.0.0"
   },
   "scripts": {
-    "test": "lerna run test",
-    "fix": "lerna run fix"
-  }
+    "test": "npm run test --workspaces --if-present",
+    "fix": "xo --fix"
+  },
+  "workspaces": [
+    "@mshima/generator-author",
+    "@mshima/generator-espree",
+    "@mshima/generator-generator",
+    "@mshima/generator-git",
+    "@mshima/generator-github",
+    "@mshima/generator-json",
+    "@mshima/generator-lerna",
+    "@mshima/generator-license",
+    "@mshima/generator-menu",
+    "@mshima/generator-mocha",
+    "@mshima/generator-node-package",
+    "@mshima/generator-package-json",
+    "@mshima/generator-readme",
+    "@mshima/generator-xo"
+  ]
 }

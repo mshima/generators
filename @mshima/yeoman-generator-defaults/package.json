@@ -1,6 +1,7 @@
 {
-  "name": "@mshima/generator-github",
+  "name": "@mshima/yeoman-generator-defaults",
   "version": "0.0.5",
+  "description": "",
   "keywords": [
     "yeoman-generator"
   ],
@@ -12,14 +13,18 @@
     "url": "https://github.com/mshima"
   },
   "files": [
-    "generators"
+    "index.js"
   ],
   "dependencies": {
-    "@mshima/yeoman-generator-defaults": "file:../yeoman-generator-defaults"
+    "find-up": "^5.0.0",
+    "yeoman-generator": "^5.2.0"
+  },
+  "devDependencies": {
+    "xo": "^0.30.0"
   },
   "scripts": {
+    "test": "mocha",
     "fix": "xo --fix",
-    "pretest": "xo",
-    "test": "mocha"
+    "pretest": "xo"
   }
 }

@@ -1,8 +1,9 @@
-function createGenerator(env) {
-  return class AppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class AppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+
+      this.checkEnvironmentVersion('3.3.0');
     }
 
     get initializing() {
@@ -19,9 +20,7 @@ function createGenerator(env) {
           this.compose = this.env.createCompose(this.destinationRoot());
         },
         mainMenu() {
-          if (this.env._rootGenerator === this) {
-            return this.compose.with('@mshima/menu:app+showMainMenu');
-          }
+          return this.compose.with('@mshima/menu:app');
         }
       };
     }
@@ -31,6 +30,10 @@ function createGenerator(env) {
     }
 
     get configuring() {
+      return {};
+    }
+
+    get composing() {
       return {
         jsonYoRc() {
           return this.compose.with('@mshima/json:yo-rc');
@@ -44,19 +47,6 @@ function createGenerator(env) {
         packageJsonApp() {
           return this.compose.require('@mshima/package-json:app').then(generatorApi => {
             generatorApi.config.set({skipPackageJsonGeneration: true});
-            generatorApi.addDevDependency('lerna', '^3.20.2');
-            generatorApi.addScript({
-              test: 'lerna run test',
-              fix: 'lerna run fix'
-            });
-          });
-        },
-        gitApp() {
-          return this.compose.require('@mshima/git:app').then(generatorApi => {
-            generatorApi.ignore(
-              '# Added by @mshima/generator-lerna',
-              'lerna-debug.log'
-            );
           });
         },
         arg(arg) {
@@ -97,7 +87,7 @@ function createGenerator(env) {
                 store: true
               }).then(answers => {
                 if (answers.namespace) {
-                  return this.compose.with('@mshima/lerna:package#*+runNamespace', {}, answers.namespace);
+                  return this.compose.with('@mshima/workspaces:workspace#*+runNamespace', {}, answers.namespace);
                 }
               });
             });
@@ -109,7 +99,7 @@ function createGenerator(env) {
                 store: true
               }).then(answers => {
                 if (answers.command) {
-                  return this.compose.with('@mshima/lerna:package#*').then(composeWith => {
+                  return this.compose.with('@mshima/workspaces:workspace#*').then(composeWith => {
                     composeWith.runCommand(answers.command);
                   });
                 }
@@ -122,14 +112,27 @@ function createGenerator(env) {
 
     get default() {
       return {
-        lernaPackage() {
-          return this.compose.with('@mshima/lerna:package#*');
+        workspaces() {
+          return this.compose.with('@mshima/workspaces:workspace#*');
         }
       };
     }
 
     get writing() {
       return {};
+    }
+
+    get postWriting() {
+      return {
+        packageJson() {
+          this.packageJson.merge({
+            scripts: {
+              test: 'npm run test --workspaces --if-present',
+              fix: 'npm run fix --workspaces --if-present'
+            }
+          });
+        }
+      };
     }
 
     get install() {
@@ -141,7 +144,7 @@ function createGenerator(env) {
     }
 
     _createPackage(name) {
-      return this.compose.with(`@mshima/lerna:package#${name}`);
+      return this.compose.with(`@mshima/workspaces:workspace#${name}`);
     }
   };
 }

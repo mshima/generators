@@ -2,9 +2,6 @@
 # node.js
 node_modules
 
-# Added by @mshima/generator-lerna
-lerna-debug.log
-
 # Eclipse (detected by @mshima/generator-git)
 .project
 .settings

@@ -13,11 +13,11 @@ const DETECT = {
   ]
 };
 
-function createGenerator(env) {
-  return class GitAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class GitAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {uniqueGlobally: true, features});
+      this.checkEnvironmentVersion('3.3.0');
 
       this.sections = [DEFAULTS.NODE];
       this.ignores = [];
@@ -41,7 +41,20 @@ function createGenerator(env) {
     }
 
     get prompting() {
-      return {};
+      return {
+        enableGithub() {
+          if (this.config.get('enableGithub')) {
+            return;
+          }
+
+          this.compose.once('@mshima/menu:app', generatorApi => {
+            generatorApi.registerMenu('Enable github', () => {
+              this.config.set('enableGithub', true);
+              return this.compose.with('@mshima/github:app');
+            });
+          });
+        }
+      };
     }
 
     get configuring() {

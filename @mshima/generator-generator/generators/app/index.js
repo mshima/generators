@@ -1,12 +1,12 @@
-function createGenerator(env) {
-  return class GeneratorGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class GeneratorGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
 
       this.config.defaults({
-        yeomanEnvironmentVersion: '2.10.2',
-        yeomanTestVersion: '2.5.0'
+        yeomanEnvironmentVersion: '3.3.0',
+        yeomanTestVersion: '6.0.0'
       });
     }
 
@@ -24,9 +24,7 @@ function createGenerator(env) {
           this.compose = this.env.createCompose(this.destinationRoot());
         },
         mainMenu() {
-          if (this.env._rootGenerator === this) {
-            return this.compose.with('@mshima/menu:app+showMainMenu');
-          }
+          return this.compose.with('@mshima/menu:app');
         }
       };
     }
@@ -67,13 +65,6 @@ function createGenerator(env) {
             const packageName = generatorApi.config.get('name');
             const packageNamespace = this.env.namespaceFromPackageName(packageName).unscoped;
             this.config.set('packageNamespace', packageNamespace);
-
-            generatorApi.addFile('generators');
-            generatorApi.addDevDependency({
-              'yeoman-assert': '^3.1.1',
-              'yeoman-environment': `^${this.config.get('yeomanEnvironmentVersion')}`,
-              'yeoman-test': `^${this.config.get('yeomanTestVersion')}`
-            });
           });
         },
         arg(arg) {
@@ -96,16 +87,27 @@ function createGenerator(env) {
       return {};
     }
 
+    get postWriting() {
+      return {
+        packageJson() {
+          this.packageJson.merge({
+            files: ['generators'],
+            devDependencies: {
+              'yeoman-assert': '^3.1.1',
+              'yeoman-environment': `^${this.config.get('yeomanEnvironmentVersion')}`,
+              'yeoman-test': `^${this.config.get('yeomanTestVersion')}`
+            }
+          });
+        }
+      };
+    }
+
     get install() {
       return {};
     }
 
     get end() {
       return {};
-    }
-
-    '#override'() {
-      return this.compose.with('@mshima/generator:generator#*+override');
     }
 
     '#updateYeoman'() {

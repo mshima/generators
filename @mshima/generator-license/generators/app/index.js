@@ -14,11 +14,10 @@ const licenses = [
   {name: 'No License (Copyrighted)', value: 'UNLICENSED'}
 ];
 
-function createGenerator(env) {
-  return class LicenseGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class LicenseGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {uniqueGlobally: true, features});
 
       this.option('year', {
         type: String,
@@ -45,6 +44,22 @@ function createGenerator(env) {
         desc: 'Set the output file for the generated license',
         required: false,
         defaults: 'LICENSE'
+      });
+
+      this.option('regenerate', {
+        type: Boolean,
+        desc: 'Regenerate files',
+        required: false
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
+      this.compose.on('regenerate', () => {
+        this.options.regenerate = true;
       });
     }
 
@@ -114,7 +129,7 @@ function createGenerator(env) {
           const previousCopyrightsHolders = configs.previousCopyrightsHolders ? '\n' + configs.previousCopyrightsHolders.join('/n') : '';
 
           const destinationFile = this.destinationPath(this.options.output);
-          if (this.options.override || !this.fs.exists(destinationFile)) {
+          if (this.options.regenerate || !this.fs.exists(destinationFile)) {
             this.fs.copyTpl(
               this.templatePath(filename),
               destinationFile,

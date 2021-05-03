@@ -29,43 +29,12 @@ const BASE_STRUCTURE = {
   }
 };
 
-const PROMPTS = [
-  {
-    name: 'scope',
-    message: 'Do you want to set a scope?'
-  },
-  {
-    name: 'name',
-    message: 'What the module name?',
-    default: path.basename(process.cwd())
-  },
-  {
-    name: 'description',
-    message: 'Description'
-  },
-  {
-    name: 'homepage',
-    message: 'Project homepage url'
-  },
-  {
-    name: 'keywords',
-    message: 'Package keywords (comma to split)',
-    filter(words) {
-      if (!words) {
-        return null;
-      }
-
-      return words.split(/\s*,\s*/g);
-    }
-  }
-];
-
 function createGenerator(env) {
   return class PackageJsonGenerator extends env.requireGenerator('@mshima/json:app') {
-    constructor(args, options) {
-      super(args, options);
+    constructor(args, options, features) {
+      super(args, options, features);
 
-      this.checkEnvironmentVersion('2.10.2');
+      this.checkEnvironmentVersion('3.3.0');
 
       this.packageJsonPath = this.destinationPath('package.json');
       this.packageJsonConfig = this.createStorage(this.packageJsonPath);
@@ -96,7 +65,36 @@ function createGenerator(env) {
     get prompting() {
       return {
         prompts() {
-          return this.prompt(PROMPTS, this.config);
+          return this.prompt([
+            {
+              name: 'scope',
+              message: 'Do you want to set a scope?'
+            },
+            {
+              name: 'name',
+              message: 'What the module name?',
+              default: () => path.basename(this.destinationRoot())
+            },
+            {
+              name: 'description',
+              message: 'Description'
+            },
+            {
+              name: 'homepage',
+              message: 'Project homepage url'
+            },
+            {
+              name: 'keywords',
+              message: 'Package keywords (comma to split)',
+              filter(words) {
+                if (!words) {
+                  return null;
+                }
+
+                return words.split(/\s*,\s*/g);
+              }
+            }
+          ], this.config);
         }
       };
     }
@@ -165,26 +163,15 @@ function createGenerator(env) {
       return {};
     }
 
-    '#addDependency'(packageName, version) {
-      this._addToObject('dependencies', packageName, version);
-    }
-
-    '#addPeerDependency'(packageName, version) {
-      this._addToObject('peerDependencies', packageName, version);
-    }
-
-    '#addDevDependency'(packageName, version) {
-      this.compose.if('@mshima/lerna:child', () => {}, () => {
-        this._addToObject('devDependencies', packageName, version);
-      });
-    }
-
-    '#addScript'(key, value) {
-      this._addToObject('scripts', key, value);
-    }
-
-    '#addFile'(file) {
-      this._addToArray('files', file);
+    get composeApi() {
+      return {
+        addPeerDependency(packageName, version) {
+          this._addToObject('peerDependencies', packageName, version);
+        },
+        getScope() {
+          return this.config.get('scope');
+        }
+      };
     }
 
     _addToObject(name, key, value) {

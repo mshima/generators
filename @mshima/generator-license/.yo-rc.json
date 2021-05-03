@@ -8,12 +8,12 @@
     ":generator": {
       "#app": {
         "name": "app",
-        "yeomanEnvironmentVersion": "2.10.2"
+        "yeomanEnvironmentVersion": "3.3.0"
       }
     },
     "packageNamespace": "license",
-    "yeomanEnvironmentVersion": "2.10.2",
-    "yeomanTestVersion": "2.5.0"
+    "yeomanEnvironmentVersion": "3.3.0",
+    "yeomanTestVersion": "6.0.0"
   },
   "@mshima/generator-license": {
     "disableLicenseFileGeneration": true,

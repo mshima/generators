@@ -88,11 +88,11 @@ const findNode = function (node, propetyNameOrType, nameOrLog, equalsValue) {
   return Promise.reject(node);
 };
 
-function createGenerator(env) {
-  return class EspreeAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class EspreeAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
     }
 
     get initializing() {

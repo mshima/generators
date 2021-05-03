@@ -7,11 +7,31 @@ const insertTextInTheEnd = (node, source, body) => {
 
 function createGenerator(env) {
   return class MochaGeneratorGenerator extends env.requireGenerator('@mshima/espree:app') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+    constructor(args, options, features) {
+      super(args, options, {unique: 'argument', ...features});
+
+      this.argument('name', {
+        type: String,
+        required: true
+      });
+
+      this.option('regenerate', {
+        type: Boolean,
+        desc: 'Regenerate files',
+        required: false
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
 
       this.name = this._namespaceId.instanceId;
+
+      this.compose.on('regenerate', () => {
+        this.options.regenerate = true;
+      });
     }
 
     get initializing() {
@@ -50,7 +70,7 @@ function createGenerator(env) {
       return {
         writeGeneratorTest() {
           const destinationPath = this.destinationPath(`test/${this.name}.spec.js`);
-          if (this.options.override || !this.fs.exists(destinationPath)) {
+          if (this.options.regenerate || !this.fs.exists(destinationPath)) {
             this.renderTemplate('app.spec.js.ejs', destinationPath);
           }
         },
@@ -115,10 +135,6 @@ function createGenerator(env) {
           });
         });
       });
-    }
-
-    '#override'() {
-      this.options.override = true;
     }
   };
 }

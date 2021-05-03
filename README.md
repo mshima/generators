@@ -9,7 +9,7 @@
 - generator (generates, configures, and manipulates generators)
 - git (generates git related files)
 - github (generates github related files)
-- lerna (generates, configure, and manage lerna packages)
+- workspaces (generates, configure, and manage npm workspaces)
 - license (generates license file)
 - mocha (generates and configures mocha dependency and files)
 - node-package (generates a node package)

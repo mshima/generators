@@ -1,8 +1,8 @@
-function createGenerator(env) {
-  return class MochaAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class MochaAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
     }
 
     get initializing() {
@@ -34,18 +34,26 @@ function createGenerator(env) {
     }
 
     get default() {
-      return {
-        packageJson() {
-          this.compose.once('@mshima/package-json:app', generatorApi => {
-            generatorApi.addScript('test', 'mocha');
-            generatorApi.addDevDependency('mocha', '^7.1.2');
-          });
-        }
-      };
+      return {};
     }
 
     get writing() {
       return {};
+    }
+
+    get postWriting() {
+      return {
+        packageJson() {
+          this.packageJson.merge({
+            scripts: {
+              test: 'mocha'
+            },
+            devDependencies: {
+              mocha: '^7.1.2'
+            }
+          });
+        }
+      };
     }
 
     get install() {
@@ -54,10 +62,6 @@ function createGenerator(env) {
 
     get end() {
       return {};
-    }
-
-    '#override'() {
-      return this.compose.with('@mshima/mocha:generator#*+override');
     }
   };
 }

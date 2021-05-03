@@ -1,0 +1,18 @@
+{
+  "@mshima/generator-author": {
+    "email": "",
+    "name": "",
+    "url": ""
+  },
+  "@mshima/generator-license": {
+    "license": "MIT"
+  },
+  "@mshima/generator-node-package": {},
+  "@mshima/generator-package-json": {
+    "description": "",
+    "homepage": "",
+    "keywords": null,
+    "name": "yeoman-generator-defaults",
+    "scope": "mshima"
+  }
+}

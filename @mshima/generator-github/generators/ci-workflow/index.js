@@ -1,8 +1,23 @@
-function createGenerator(env) {
-  return class GithubCiWorkflowGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class GithubCiWorkflowGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {uniqueGlobally: true, features});
+
+      this.option('regenerate', {
+        type: Boolean,
+        desc: 'Regenerate files',
+        required: false
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
+      this.compose.on('regenerate', () => {
+        this.options.regenerate = true;
+      });
     }
 
     get initializing() {
@@ -37,7 +52,7 @@ function createGenerator(env) {
       return {
         githubWorkflowsTestYml() {
           const destinationFile = this.destinationPath('.github/workflows/test.yml');
-          if (this.options.override || !this.fs.exists(destinationFile)) {
+          if (this.options.regenerate || !this.fs.exists(destinationFile)) {
             this.renderTemplate('.github/workflows/test.yml.ejs', destinationFile);
           }
         }

@@ -1,8 +1,8 @@
-function createGenerator(env) {
-  return class GithubAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class GithubAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {uniqueGlobally: true, features});
+      this.checkEnvironmentVersion('3.3.0');
     }
 
     get initializing() {

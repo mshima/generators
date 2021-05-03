@@ -1,10 +1,21 @@
-function createGenerator(env) {
-  return class LernaChildGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class WorkspaceGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {unique: 'argument', ...features});
 
-      this.lernaPackageName = this.options.lernaPackageName;
+      this.argument('workspaceName', {
+        type: String,
+        required: true,
+        description: 'Workspace name'
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
+      this.workspaceName = this.options.workspaceName;
     }
 
     get initializing() {
@@ -22,10 +33,10 @@ function createGenerator(env) {
         },
         composeParent() {
           if (this.compose && this.compose.atParent()) {
-            return;
+
           }
 
-          throw new Error('Lerna child requires parent to be running');
+          // Throw new Error('Workspace requires parent to be running');
         },
         authorFromParent() {
           return this.compose.once('@mshima/author:app', generatorApi => {
@@ -42,7 +53,7 @@ function createGenerator(env) {
         packageJsonFromParent() {
           return this.compose.once('@mshima/package-json:app', generatorApi => {
             const {scope, homepage, keywords} = this.compose.atParent().getConfig('@mshima/package-json');
-            const optionsForPackageJson = {scope, homepage, keywords, name: this.lernaPackageName};
+            const optionsForPackageJson = {scope, homepage, keywords, name: this.workpaceName};
             generatorApi.config.set(optionsForPackageJson);
           });
         }
@@ -55,14 +66,8 @@ function createGenerator(env) {
 
     get configuring() {
       return {
-        packageJsonApp() {
-          return this.compose.with('@mshima/package-json:app');
-        },
         nodePackageApp() {
           return this.compose.with('@mshima/node-package:app', {disableReadme: true});
-        },
-        menuApp() {
-          return this.compose.with('@mshima/menu:app');
         }
       };
     }
@@ -81,12 +86,6 @@ function createGenerator(env) {
 
     get end() {
       return {};
-    }
-
-    '#addDevDependency'(packageName, version) {
-      return this.compose.once('@mshima/package-json:app', generatorApi => {
-        generatorApi.addDevDependency(packageName, version);
-      });
     }
   };
 }

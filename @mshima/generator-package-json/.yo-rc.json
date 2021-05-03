@@ -9,13 +9,13 @@
       "#app": {
         "className": "AppGenerator",
         "name": "app",
-        "yeomanEnvironmentVersion": "2.10.2"
+        "yeomanEnvironmentVersion": "3.3.0"
       }
     },
     "packageNamespace": "package-json",
-    "yeomanEnvironmentVersion": "2.10.2",
+    "yeomanEnvironmentVersion": "3.3.0",
     "yeomanGeneratorVersion": "4.10.0",
-    "yeomanTestVersion": "2.5.0"
+    "yeomanTestVersion": "6.0.0"
   },
   "@mshima/generator-license": {
     "disableLicenseFileGeneration": true,

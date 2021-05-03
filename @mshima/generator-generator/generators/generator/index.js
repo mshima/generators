@@ -1,14 +1,23 @@
 function createGenerator(env) {
   const SuperClass = env.requireGenerator('@mshima/espree:app');
   return class SubGenerator extends SuperClass {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+    constructor(args, options, features) {
+      super(args, options, {unique: 'argument', ...features});
 
       this.argument('name', {
         type: String,
         required: true,
         description: 'Generator name'
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
+      this.compose.on('regenerate', () => {
+        this.options.regenerate = true;
       });
     }
 
@@ -36,7 +45,7 @@ function createGenerator(env) {
       return {
         defaults(generatorName) {
           this.instanceConfig.defaults({
-            yeomanEnvironmentVersion: '2.10.2',
+            yeomanEnvironmentVersion: '3.3.0',
             name: generatorName
           });
         },
@@ -106,7 +115,7 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
       return {
         writeFiles() {
           const generatorFile = this._generatorFile();
-          if (this.options.override || !this.existsDestination(generatorFile)) {
+          if (this.options.regenerate || !this.existsDestination(generatorFile)) {
             this.renderTemplate('index.js.ejs', generatorFile);
           }
 
@@ -114,7 +123,7 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
           const files = this._getFiles();
           files.forEach(file => {
             const destinationFile = this.destinationPath(`generators/${generatorName}/templates/${file}.ejs`);
-            if (!this.options.override && this.existsDestination(destinationFile)) {
+            if (!this.options.regenerate && this.existsDestination(destinationFile)) {
               return;
             }
 
@@ -145,11 +154,16 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
     }
 
     _addMainMenu() {
-      this._writeTask(this._generatorFile(), 'initializing', 'mainMenu', `// Compose with menu
+      this._writeTask(
+        this._generatorFile(),
+        'initializing',
+        'mainMenu',
+        `// Compose with menu
           if (this.env._rootGenerator === this) {
             // Queue main menu
             return this.compose.with('@mshima/menu:app+showMainMenu');
-          }`);
+          }`
+      );
       this.compose.once('@mshima/package-json:app', generatorApi => {
         generatorApi.addPeerDependency('@mshima/generator-menu', '*');
       });
@@ -158,12 +172,7 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
     _addComposeWithEntry(namespace) {
       namespace = this.env.requireNamespace(namespace);
       const methodName = this._.camelCase(namespace.unscopedNamespace);
-      this._writeTask(
-        this._generatorFile(),
-        'configuring',
-        methodName,
-        `return this.compose.require('${namespace}');`
-      );
+      this._writeTask(this._generatorFile(), 'configuring', methodName, `return this.compose.require('${namespace}');`);
       this.compose.api.packageJson.addPeerDependency(namespace.generatorHint, namespace.semver || '*');
     }
 
@@ -190,7 +199,7 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
         'writing',
         this._.camelCase(filename),
         `const destinationFile = this.destinationPath(\`${filename}\`);
-          if (this.options.override || !this.fs.exists(destinationFile)) {
+          if (this.options.regenerate || !this.fs.exists(destinationFile)) {
             this.renderTemplate('${filename}.ejs', destinationFile);
           }`
       );
@@ -206,48 +215,59 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
         ['argument.body.body', 'key.name', priority],
         ['value.body.body', 'type', 'ReturnStatement'],
         'argument'
-      ]).then(node => {
-        if (!node.properties) {
-          return Promise.reject(new Error('Could not find the node'));
-        }
+      ])
+        .then(node => {
+          if (!node.properties) {
+            return Promise.reject(new Error('Could not find the node'));
+          }
 
-        const empty = !node.properties.length;
+          const empty = !node.properties.length;
 
-        const write = (source = originalSource, options = {}) => {
-          const {
-            position = node.range[0] + 1,
-            pre = `
+          const write = (source = originalSource, options = {}) => {
+            const {
+              position = node.range[0] + 1,
+              pre = `
         `,
-            post = empty ? `
-      ` : ','
-          } = options;
+              post = empty
+                ? `
+      `
+                : ','
+            } = options;
 
-          source = source.slice(0, position) + `${pre}${taskName}() {
+            source =
+              source.slice(0, position) +
+              `${pre}${taskName}() {
           ${body}
-        }${post}` + source.slice(position);
+        }${post}` +
+              source.slice(position);
 
-          return Promise.resolve(source);
-        };
+            return Promise.resolve(source);
+          };
 
-        const remove = (node, source) => {
-          source = source.slice(0, node.range[0]) + source.slice(node.range[1]);
-          return Promise.resolve(source);
-        };
+          const remove = (node, source) => {
+            source = source.slice(0, node.range[0]) + source.slice(node.range[1]);
+            return Promise.resolve(source);
+          };
 
-        let promise;
-        if (!empty) {
-          promise = this._findNode(node, ['properties', ['Property', taskName]]);
-          return promise.then(node => {
-            return remove(node, originalSource).then(source => write(source, {position: node.range[0], post: '', pre: ''}));
-          }).catch(() => write());
-        }
+          let promise;
+          if (!empty) {
+            promise = this._findNode(node, ['properties', ['Property', taskName]]);
+            return promise
+              .then(node => {
+                return remove(node, originalSource).then(source =>
+                  write(source, {position: node.range[0], post: '', pre: ''})
+                );
+              })
+              .catch(() => write());
+          }
 
-        return write();
-      }).then(source => {
-        if (source) {
-          this.writeDestination(filename, source);
-        }
-      });
+          return write();
+        })
+        .then(source => {
+          if (source) {
+            this.writeDestination(filename, source);
+          }
+        });
     }
 
     _templateData(path) {
@@ -277,10 +297,6 @@ Versioned: @scope/package-namespace:generator@>=0.0.1
 
     '#getGeneratorFiles'() {
       return this._getFiles();
-    }
-
-    '#override'() {
-      this.options.override = true;
     }
   };
 }

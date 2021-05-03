@@ -32,11 +32,11 @@ function mergeDeep(template, source, dest = _.cloneDeep(template)) {
   return dest;
 }
 
-function createGenerator(env) {
-  return class JsonAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class JsonAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
 
       this.jsonsToFormat = {};
     }

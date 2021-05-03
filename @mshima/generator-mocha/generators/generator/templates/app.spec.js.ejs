@@ -3,10 +3,11 @@ const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 
 describe('<%= scopePrefix %><%= packageNamespace %>:<%= name %>', () => {
-  let ctx;
+  let runContext;
+  let runResult;
 
-  beforeEach(() => {
-    ctx = helpers
+  beforeEach(async () => {
+    runContext = helpers
       .create(
         '<%= scopePrefix %><%= packageNamespace %>:<%= name %>',
         {},
@@ -19,12 +20,12 @@ describe('<%= scopePrefix %><%= packageNamespace %>:<%= name %>', () => {
   });
 
   afterEach(() => {
-    ctx.cleanTestDirectory();
+    runContext.cleanTestDirectory();
   });
 
   describe('with sample values', () => {
-    beforeEach(() => {
-      return ctx.run();
+    beforeEach(async () => {
+      runResult = await runContext.run();
     });
 
     it('doesn\'t fails', () => {

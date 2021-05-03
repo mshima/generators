@@ -1,8 +1,23 @@
-function createGenerator(env) {
-  return class XoAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+function createGenerator() {
+  return class XoAppGenerator extends require('@mshima/yeoman-generator-defaults') {
+    constructor(args, options, features) {
+      super(args, options, {unique: true, features});
+
+      this.option('regenerate', {
+        type: Boolean,
+        desc: 'Regenerate files',
+        required: false
+      });
+
+      if (this.options.help) {
+        return;
+      }
+
+      this.checkEnvironmentVersion('3.3.0');
+
+      this.compose.on('regenerate', () => {
+        this.options.regenerate = true;
+      });
     }
 
     get initializing() {
@@ -29,33 +44,35 @@ function createGenerator(env) {
       return {};
     }
 
-    get default() {
-      return {
-        packageJson() {
-          this.compose.once('@mshima/package-json:app', generatorApi => {
-            generatorApi.addScript({
-              fix: 'xo --fix',
-              pretest: 'xo'
-            });
-            generatorApi.addDevDependency('xo', '^0.30.0');
-          });
-        }
-      };
-    }
-
     get writing() {
       return {
         xoConfigJson() {
           const destinationPath = this.destinationPath('.xo-config.json');
-          if (this.options.override || !this.fs.exists(destinationPath)) {
+          if (this.options.regenerate || !this.fs.exists(destinationPath)) {
             this.renderTemplate('.xo-config.json.ejs', destinationPath);
           }
         },
         prettierrc() {
           const destinationPath = this.destinationPath('.prettierrc');
-          if (this.options.override || !this.fs.exists(destinationPath)) {
+          if (this.options.regenerate || !this.fs.exists(destinationPath)) {
             this.renderTemplate('.prettierrc.ejs', destinationPath);
           }
+        }
+      };
+    }
+
+    get postWriting() {
+      return {
+        packageJson() {
+          this.packageJson.merge({
+            scripts: {
+              fix: 'xo --fix',
+              pretest: 'xo'
+            },
+            devDependencies: {
+              xo: '^0.30.0'
+            }
+          });
         }
       };
     }
