@@ -11,11 +11,15 @@
     "email": "marceloshima@gmail.com",
     "url": "https://github.com/mshima"
   },
+  "type": "module",
   "files": [
     "generators"
   ],
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
-    "@mshima/generator": "^5.0.0-beta.1",
+    "@mshima/yeoman-generator-defaults": "file:../yeoman-generator-defaults",
     "pkg-install": "^1.0.0"
   },
   "peerDependencies": {
@@ -26,10 +30,5 @@
     "@mshima/generator-mocha": "0.0.5",
     "@mshima/generator-package-json": "0.0.5",
     "@mshima/generator-xo": "0.0.5"
-  },
-  "scripts": {
-    "fix": "xo --fix",
-    "pretest": "xo",
-    "test": "mocha"
   }
 }

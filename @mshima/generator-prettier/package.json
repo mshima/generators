@@ -1,0 +1,29 @@
+{
+  "name": "@mshima/generator-prettier",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "type": "module",
+  "files": [
+    "generators"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "update-snapshot": "mocha --updateSnapshot"
+  },
+  "dependencies": {
+    "@mshima/yeoman-generator-defaults": "file:../yeoman-generator-defaults",
+    "prettier": "2.3.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.4.0",
+    "mocha-expect-snapshot": "1.0.0",
+    "yeoman-assert": "^3.1.1",
+    "yeoman-environment": "^3.3.0",
+    "yeoman-test": "^6.0.0"
+  }
+}

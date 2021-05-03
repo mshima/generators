@@ -1,186 +1,104 @@
-const {install} = require('pkg-install');
+const GENERATOR_REGENERATE = '@mshima/regenerate:app';
+const GENERATOR_MENU = '@mshima/menu:app';
+const GENERATOR_GIT = '@mshima/git:app';
+const GENERATOR_XO = '@mshima/xo:app';
+const GENERATOR_MOCHA = '@mshima/mocha:app';
+const GENERATOR_GENERATOR = '@mshima/generator:app';
 
-function createGenerator(env) {
-  return class NodePackageAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+const OPTIONAL_GENERATORS = [GENERATOR_GIT, GENERATOR_MOCHA, GENERATOR_GENERATOR];
+const REQUIRED_GENERATORS = ['@mshima/json:yo-rc', '@mshima/package-json:app', '@mshima/readme:app'];
 
-      const {disableLicense, disableReadme} = this.options;
-      this.config.defaults({disableLicense, disableReadme});
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
+
+export default class NodePackageAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, features);
+
+    if (this.options.help) {
+      return;
     }
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
+    this.checkEnvironmentVersion('3.3.0');
+  }
 
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
+  get '#initializing'() {
+    return {
+      mainMenu() {
+        return this.compose.with(GENERATOR_MENU);
+      },
+      async regenerate() {
+        const regenerateGenerator = await this.compose.with(GENERATOR_REGENERATE);
 
-          this.compose = this.env.createCompose(this.destinationRoot());
-        },
-        mainMenu() {
-          if (this.env._rootGenerator === this) {
-            // Queue main menu
-            return this.compose.with('@mshima/menu:app+showMainMenu');
-          }
+        regenerateGenerator.registerRequired('@mshima/node-package:app');
+
+        const { enableGit, enableGenerator } = this.options;
+
+        if (enableGit || this.storage.enableGit) {
+          regenerateGenerator.registerRequired(GENERATOR_GIT);
+          this.storage.enableGit = undefined;
         }
-      };
-    }
-
-    get prompting() {
-      return {
-        enableMocha() {
-          if (this.config.get('enableMocha')) {
-            return;
-          }
-
-          this.compose.once('@mshima/menu:app', generatorApi => {
-            generatorApi.registerMenu('Enable mocha', () => {
-              this.config.set('enableMocha', true);
-              return this.compose.with('@mshima/mocha:app');
-            });
-          });
-        },
-        enableGithub() {
-          if (this.config.get('enableGithub')) {
-            return;
-          }
-
-          this.compose.once('@mshima/menu:app', generatorApi => {
-            generatorApi.registerMenu('Enable github', () => {
-              this.config.set('enableGithub', true);
-              return this.compose.with('@mshima/github:app');
-            });
-          });
-        },
-        enableGenerator() {
-          if (this.config.get('enableGenerator')) {
-            return;
-          }
-
-          this.compose.once('@mshima/menu:app', generatorApi => {
-            generatorApi.registerMenu('Enable generator', () => {
-              return this._enableGenerator();
-            });
-          });
+        if (this.storage.enableXo) {
+          regenerateGenerator.registerRequired(GENERATOR_XO);
+          this.storage.enableXo = undefined;
         }
-      };
-    }
-
-    get configuring() {
-      return {
-        jsonYoRc() {
-          return this.compose.with('@mshima/json:yo-rc');
-        },
-        packageJsonApp() {
-          return this.compose.with('@mshima/package-json:app');
-        },
-        licenseApp() {
-          if (this.config.get('disableLicense')) {
-            return;
-          }
-
-          return this.compose.with('@mshima/license:app');
-        },
-        readmeApp() {
-          if (this.config.get('disableReadme')) {
-            return;
-          }
-
-          return this.compose.with('@mshima/readme:app');
-        },
-        xoApp() {
-          return this.compose.with('@mshima/xo:app');
-        },
-        gitApp() {
-          return this.compose.with('@mshima/git:app');
-        },
-        mochaApp() {
-          if (!this.config.get('enableMocha')) {
-            return;
-          }
-
-          return this.compose.with('@mshima/mocha:app');
-        },
-        githubApp() {
-          if (!this.config.get('enableGithub')) {
-            return;
-          }
-
-          return this.compose.with('@mshima/github:app');
-        },
-        generatorApp() {
-          if (!this.config.get('enableGenerator')) {
-            return;
-          }
-
-          return this.compose.with('@mshima/generator:app');
-        },
-        menu() {
-          this.compose.once('@mshima/menu:app', generatorApi => {
-            generatorApi.registerMenu(
-              'Override existing files',
-              () => {
-                const promise = this.compose.with('@mshima/generator:app+override');
-                if (this.config.get('enableMocha')) {
-                  return this.compose.with('@mshima/mocha:app+override');
-                }
-
-                return promise;
-              }
-            );
-          });
+        if (this.storage.enableMocha) {
+          regenerateGenerator.registerRequired(GENERATOR_MOCHA);
+          this.storage.enableMocha = undefined;
         }
-      };
-    }
+        if (enableGenerator || this.storage.enableGenerator) {
+          regenerateGenerator.registerRequired(GENERATOR_GENERATOR);
+          this.storage.enableGenerator = undefined;
+        }
 
-    get default() {
-      return {};
-    }
+        if (this.config.get('with')) {
+          Object.keys(this.config.get('with')).forEach(generator => regenerateGenerator.registerRequired(generator));
+          this.config.delete('with');
+        }
 
-    get writing() {
-      return {};
-    }
+        regenerateGenerator.registerOptional(OPTIONAL_GENERATORS);
+      },
+    };
+  }
 
-    get install() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get end() {
-      return {};
-    }
+  get '#configuring'() {
+    return {};
+  }
 
-    _enableGenerator() {
-      this.config.set('enableGenerator', true);
-      return this.compose.with('@mshima/generator:app');
-    }
+  get '#composing'() {
+    return {
+      composing() {
+        return this.compose.with(REQUIRED_GENERATORS);
+      },
+    };
+  }
 
-    '#install'() {
-      this.queueTask({
-        taskName: `npmInstall ${this.destinationPath()}`,
-        queueName: 'end',
-        method: () => {
-          console.log(`Running install at ${this.destinationRoot()}`);
-          return install({}, {stdout: 'pipe', cwd: this.destinationRoot()}).then(result => {
-            console.log(result.stdout);
-          });
-        },
-        run: false,
-        once: true
-      });
-    }
+  get '#default'() {
+    return {};
+  }
 
-    '#enableGenerator'() {
-      return this._enableGenerator();
-    }
-  };
+  get '#writing'() {
+    return {};
+  }
+
+  get '#postWriting'() {
+    return {
+      packageJson() {
+        this.packageJson.defaults({
+          type: 'module',
+        });
+      },
+    };
+  }
+
+  get '#install'() {
+    return {};
+  }
+
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

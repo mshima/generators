@@ -1,56 +1,40 @@
-function createGenerator(env) {
-  return class GithubAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
-    }
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
+export default class GithubAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, { uniqueGlobally: true, features });
+    this.checkEnvironmentVersion('3.3.0');
+  }
 
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
+  get '#initializing'() {
+    return {};
+  }
 
-          this.compose = this.env.createCompose(this.destinationRoot());
-        }
-      };
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get prompting() {
-      return {};
-    }
+  get '#configuring'() {
+    return {
+      githubCiWorkflow() {
+        return this.compose.require('@mshima/github:ci-workflow#node.js');
+      },
+    };
+  }
 
-    get configuring() {
-      return {
-        githubCiWorkflow() {
-          return this.compose.require('@mshima/github:ci-workflow');
-        }
-      };
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get default() {
-      return {};
-    }
+  get '#writing'() {
+    return {};
+  }
 
-    get writing() {
-      return {};
-    }
+  get '#install'() {
+    return {};
+  }
 
-    get install() {
-      return {};
-    }
-
-    get end() {
-      return {};
-    }
-  };
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

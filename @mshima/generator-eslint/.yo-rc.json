@@ -1,0 +1,37 @@
+{
+  "@mshima/generator-package-json": {
+    "scope": "mshima",
+    "name": "generator-eslint",
+    "description": "",
+    "homepage": "",
+    "keywords": null
+  },
+  "@mshima/generator-node-package": {},
+  "@mshima/generator-generator": {
+    "yeomanEnvironmentVersion": "3.3.0",
+    "yeomanTestVersion": "6.0.0",
+    "packageNamespace": "eslint",
+    ":generator": {
+      "#app": {
+        "yeomanEnvironmentVersion": "3.3.0",
+        "name": "app"
+      }
+    }
+  },
+  "@mshima/generator-mocha": {
+    "name": "app",
+    "packageNamespace": "eslint",
+    ":generator": {
+      "#app": {
+        "name": "app"
+      }
+    }
+  },
+  "@mshima/generator-regenerate": {
+    "with": {
+      "@mshima/node-package:app": true,
+      "@mshima/mocha:app": true,
+      "@mshima/generator:app": true
+    }
+  }
+}

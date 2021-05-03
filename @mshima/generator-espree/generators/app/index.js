@@ -1,4 +1,4 @@
-const espree = require('espree');
+import espree from 'espree';
 
 const log = (node, arg, propetyNameOrType) => {
   console.log('=================================');
@@ -61,7 +61,11 @@ const findNode = function (node, propetyNameOrType, nameOrLog, equalsValue) {
           }
         }
 
-        return (equalsValue !== undefined && this._.get(value, nameOrLog) === equalsValue) || (value.id && value.id.name === nameOrLog) || (value.key && value.key.name === nameOrLog);
+        return (
+          (equalsValue !== undefined && this._.get(value, nameOrLog) === equalsValue) ||
+          (value.id && value.id.name === nameOrLog) ||
+          (value.key && value.key.name === nameOrLog)
+        );
       });
     }
   } else {
@@ -88,63 +92,59 @@ const findNode = function (node, propetyNameOrType, nameOrLog, equalsValue) {
   return Promise.reject(node);
 };
 
-function createGenerator(env) {
-  return class EspreeAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
-    }
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
+export default class EspreeAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, features);
+    this.checkEnvironmentVersion('3.3.0');
+  }
 
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
-
-          this.compose = this.env.createCompose(this.destinationRoot());
+  get '#initializing'() {
+    return {
+      composeContext() {
+        if (this.compose) {
+          return;
         }
-      };
-    }
 
-    get prompting() {
-      return {};
-    }
+        if (this.env._rootGenerator && this.env._rootGenerator !== this) {
+          throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
+        }
 
-    get configuring() {
-      return {};
-    }
+        this.compose = this.env.createCompose(this.destinationRoot());
+      },
+    };
+  }
 
-    get default() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get writing() {
-      return {};
-    }
+  get '#configuring'() {
+    return {};
+  }
 
-    get install() {
-      return {};
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get end() {
-      return {};
-    }
+  get '#writing'() {
+    return {};
+  }
 
-    _parseScript(source) {
-      return espree.parse(source, {range: true, ecmaVersion: 10});
-    }
+  get '#install'() {
+    return {};
+  }
 
-    _findNode(parsed, spec, log) {
-      return findNode.call(this, parsed, spec, log);
-    }
-  };
+  get '#end'() {
+    return {};
+  }
+
+  _parseScript(source) {
+    return espree.parse(source, { range: true, ecmaVersion: 10 });
+  }
+
+  _findNode(parsed, spec, log) {
+    return findNode.call(this, parsed, spec, log);
+  }
 }
-
-module.exports = {
-  createGenerator
-};

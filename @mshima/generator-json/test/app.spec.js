@@ -1,20 +1,18 @@
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+import path, { dirname } from 'path';
+import assert from 'yeoman-assert';
+import helpers from 'yeoman-test';
+
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('@mshima/json:app', () => {
   let ctx;
 
   beforeEach(() => {
     ctx = helpers
-      .create(
-        '@mshima/json:app',
-        {},
-        {experimental: true}
-      )
-      .withLookups([
-        {npmPaths: path.join(__dirname, '..', '..'), registerToScope: 'mshima'}
-      ]);
+      .create('@mshima/json:app', {}, { experimental: true })
+      .withLookups([{ npmPaths: path.join(__dirname, '..', '..'), registerToScope: 'mshima' }]);
   });
 
   afterEach(() => {
@@ -25,9 +23,12 @@ describe('@mshima/json:app', () => {
     const fileName = 'test.json';
 
     beforeEach(() => {
-      return ctx.withOptions({
-        empty: true
-      }).withArguments([fileName]).run();
+      return ctx
+        .withOptions({
+          empty: true,
+        })
+        .withArguments([fileName])
+        .run();
     });
 
     it('it works', () => {

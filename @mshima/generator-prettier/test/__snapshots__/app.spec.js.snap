@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@mshima/prettier:app with sample values should match snapshot 1`] = `
+Object {
+  ".prettierrc.json": Object {
+    "contents": "{
+  \\"singleQuote\\": true,
+  \\"printWidth\\": 120,
+  \\"arrowParens\\": \\"avoid\\"
+}
+",
+    "stateCleared": "modified",
+  },
+  "package.json": Object {
+    "contents": "{
+  \\"scripts\\": {
+    \\"pretest\\": \\"concurrently -m 1 npm:pretest:*\\",
+    \\"pretest:prettier\\": \\"npm run prettier:check\\",
+    \\"fix\\": \\"concurrently -m 1 npm:fix:*\\",
+    \\"fix:prettier\\": \\"npm run prettier:write\\",
+    \\"prettier:write\\": \\"prettier --write .\\",
+    \\"prettier:check\\": \\"prettier --check .\\"
+  },
+  \\"devDependencies\\": {
+    \\"concurrently\\": \\"^4.1.0\\",
+    \\"prettier\\": \\"2.3.0\\"
+  }
+}
+",
+    "stateCleared": "modified",
+  },
+}
+`;

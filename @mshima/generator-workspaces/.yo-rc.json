@@ -1,0 +1,42 @@
+{
+  "@mshima/generator-author": {
+    "email": "marceloshima@gmail.com",
+    "name": "Marcelo Shima",
+    "url": "https://github.com/mshima"
+  },
+  "@mshima/generator-generator": {
+    ":generator": {
+      "#app": {
+        "name": "app",
+        "yeomanEnvironmentVersion": "3.3.0"
+      },
+      "#child": {
+        "name": "child",
+        "yeomanEnvironmentVersion": "3.3.0"
+      },
+      "#package": {
+        "name": "package",
+        "yeomanEnvironmentVersion": "3.3.0"
+      }
+    },
+    "packageNamespace": "workspaces",
+    "yeomanEnvironmentVersion": "3.3.0",
+    "yeomanGeneratorVersion": "4.10.0",
+    "yeomanTestVersion": "6.0.0"
+  },
+  "@mshima/generator-license": {
+    "disableLicenseFileGeneration": true,
+    "license": "MIT"
+  },
+  "@mshima/generator-node-package": {
+    "disableReadme": true,
+    "enableGenerator": true
+  },
+  "@mshima/generator-package-json": {
+    "description": "",
+    "homepage": "https://github.com/mshima/generators",
+    "keywords": ["yeoman-generator"],
+    "name": "generator-workspaces",
+    "scope": "mshima"
+  }
+}

@@ -1,67 +1,65 @@
-function createGenerator(env) {
-  return class MochaAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
-    }
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
+export default class MochaAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, features);
 
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
+    this.checkEnvironmentVersion('3.3.0');
+  }
 
-          this.compose = this.env.createCompose(this.destinationRoot());
-        }
-      };
-    }
+  get '#initializing'() {
+    return {};
+  }
 
-    get prompting() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get configuring() {
-      return {
-        mochaGenerator() {
-          return this.compose.with('@mshima/mocha:generator#*');
-        }
-      };
-    }
+  get '#configuring'() {
+    return {
+      mochaGenerator() {
+        return this.compose.with('@mshima/mocha:generator#*');
+      },
+    };
+  }
 
-    get default() {
-      return {
-        packageJson() {
-          this.compose.once('@mshima/package-json:app', generatorApi => {
-            generatorApi.addScript('test', 'mocha');
-            generatorApi.addDevDependency('mocha', '^7.1.2');
-          });
-        }
-      };
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get writing() {
-      return {};
-    }
+  get '#writing'() {
+    return {};
+  }
 
-    get install() {
-      return {};
-    }
+  get '#postWriting'() {
+    return {
+      packageJson() {
+        this.packageJson.merge({
+          scripts: {
+            test: 'mocha',
+          },
+          devDependencies: {
+            mocha: '^8.4.0',
+          },
+        });
+      },
+      eslintRc() {
+        const eslintRcStorage = this.createStorage('.eslintrc.json');
+        if (!eslintRcStorage.existed) return;
+        eslintRcStorage.merge({
+          env: {
+            mocha: true,
+          },
+        });
+      },
+    };
+  }
 
-    get end() {
-      return {};
-    }
+  get '#install'() {
+    return {};
+  }
 
-    '#override'() {
-      return this.compose.with('@mshima/mocha:generator#*+override');
-    }
-  };
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

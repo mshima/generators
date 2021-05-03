@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@mshima/eslint:app with sample values should match snapshot 1`] = `
+Object {
+  ".eslintrc.json": Object {
+    "contents": "{
+  \\"env\\": {
+    \\"node\\": true,
+    \\"es6\\": true
+  },
+  \\"extends\\": [\\"eslint:recommended\\", \\"plugin:import/recommended\\"],
+  \\"parserOptions\\": {
+    \\"ecmaVersion\\": 2020
+  }
+}
+",
+    "stateCleared": "modified",
+  },
+  "package.json": Object {
+    "contents": "{
+  \\"scripts\\": {
+    \\"pretest\\": \\"concurrently -m 1 npm:pretest:*\\",
+    \\"pretest:eslint\\": \\"npm run eslint:check\\",
+    \\"fix\\": \\"concurrently -m 1 npm:fix:*\\",
+    \\"fix:eslint\\": \\"npm run eslint:fix\\",
+    \\"eslint:fix\\": \\"eslint --fix .\\",
+    \\"eslint:check\\": \\"eslint .\\"
+  },
+  \\"devDependencies\\": {
+    \\"concurrently\\": \\"^4.1.0\\",
+    \\"eslint\\": \\"7.26.0\\",
+    \\"eslint-plugin-import\\": \\"2.23.2\\"
+  }
+}
+",
+    "stateCleared": "modified",
+  },
+}
+`;

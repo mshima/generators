@@ -6,32 +6,31 @@
     "yeoman-generator"
   ],
   "homepage": "https://github.com/mshima/generators",
+  "bugs": {
+    "url": "https://github.com/mshima/generators/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mshima/generators.git"
+  },
   "license": "MIT",
   "author": {
     "name": "Marcelo Shima",
     "email": "marceloshima@gmail.com",
     "url": "https://github.com/mshima"
   },
+  "type": "module",
   "files": [
     "generators"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mshima/generators.git"
+  "scripts": {
+    "test": "mocha"
   },
   "dependencies": {
-    "@mshima/generator": "^5.0.0-beta.1"
+    "@mshima/yeoman-generator-defaults": "file:../yeoman-generator-defaults"
   },
   "peerDependencies": {
     "@mshima/generator-menu": "0.0.5",
     "@mshima/generator-package-json": "0.0.5"
-  },
-  "scripts": {
-    "fix": "xo --fix",
-    "pretest": "xo",
-    "test": "mocha"
-  },
-  "bugs": {
-    "url": "https://github.com/mshima/generators/issues"
   }
 }

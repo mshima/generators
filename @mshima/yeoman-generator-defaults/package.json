@@ -1,0 +1,27 @@
+{
+  "name": "@mshima/yeoman-generator-defaults",
+  "version": "0.0.5",
+  "description": "",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "homepage": "https://github.com/mshima/generators",
+  "license": "MIT",
+  "author": {
+    "name": "Marcelo Shima",
+    "email": "marceloshima@gmail.com",
+    "url": "https://github.com/mshima"
+  },
+  "type": "module",
+  "exports": "./index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "find-up": "^5.0.0",
+    "yeoman-generator": "github:mshima/generator#main"
+  }
+}

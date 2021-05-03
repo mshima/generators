@@ -1,82 +1,55 @@
-function createGenerator(env) {
-  return class ReadmeAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
+
+export default class ReadmeAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, { uniqueGlobally: true, features });
+
+    this.option('regenerate', {
+      type: Boolean,
+      desc: 'Regenerate files',
+      required: false,
+    });
+
+    if (this.options.help) {
+      return;
     }
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
+    this.checkEnvironmentVersion('3.3.0');
 
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
+    this.compose.on('regenerate', () => {
+      this.options.regenerate = true;
+    });
+  }
 
-          this.compose = this.env.createCompose(this.destinationRoot());
-        }
-      };
-    }
+  get '#initializing'() {
+    return {};
+  }
 
-    get prompting() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get configuring() {
-      return {};
-    }
+  get '#configuring'() {
+    return {};
+  }
 
-    get default() {
-      return {};
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get writing() {
-      return {
-        readmeMd() {
-          const destinationPath = this.destinationPath('README.md');
-          if (this.options.override || !this.fs.exists(destinationPath)) {
-            this.renderTemplate('README.md.ejs', destinationPath);
-          }
-        }
-      };
-    }
+  get '#writing'() {
+    return {
+      readmeMd() {
+        this.renderTemplate('(.)?*', '');
+      },
+    };
+  }
 
-    get install() {
-      return {};
-    }
+  get '#install'() {
+    return {};
+  }
 
-    get end() {
-      return {};
-    }
-
-    _templateData() {
-      const self = this;
-      return {
-        ...super._templateData(),
-        composeData: {
-          get license() {
-            if (!self.compose.api.license) {
-              return null;
-            }
-
-            return self.compose.api.license.config.getAll();
-          },
-          get author() {
-            if (!self.compose.api.author) {
-              return null;
-            }
-
-            return self.compose.api.author.config.getAll();
-          }
-        }
-      };
-    }
-  };
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

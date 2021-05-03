@@ -1,7 +1,7 @@
-# 
+# <%= this.packageJson.get('name') %>
 
-<% if (composeData.license) { %>
+<%= this.packageJson.get('description') %>
+
 ## License
 
-<%= composeData.license.license %> ©<% if (composeData.author) { %> [<%= composeData.author.name %>](<%= composeData.author.website %>)<% } %>
-<% } %>
+<%= this.packageJson.get('license') || 'UNLINCENSED' %> ©<% if (this.packageJson.get('author')) { %> [<%= this.packageJson.getPath('author.name') %>](<%= this.packageJson.getPath('author.url') %>)<% } %>

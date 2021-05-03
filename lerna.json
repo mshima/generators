@@ -1,7 +1,0 @@
-{
-  "packages": [
-    "packages/*",
-    "@mshima/*"
-  ],
-  "version": "0.0.5"
-}

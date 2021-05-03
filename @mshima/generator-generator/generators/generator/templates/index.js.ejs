@@ -1,40 +1,57 @@
-function createGenerator(env) {
-  return class <%= className %>Generator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('<%= yeomanEnvironmentVersion %>');
+import ParentGenerator from 'yeoman-generator';
+
+export default class <%= className %>Generator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, {taskPrefix: '#', ...features});
+
+    if (this.options.help) {
+      return;
     }
 
-    get initializing() {
-      return {};
-    }
+    this.checkEnvironmentVersion('<%= yeomanEnvironmentVersion %>');
+  }
 
-    get prompting() {
-      return {};
-    }
+  get '#initializing'() {
+    return {};
+  }
 
-    get configuring() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get default() {
-      return {};
-    }
+  get '#configuring'() {
+    return {};
+  }
 
-    get writing() {
-      return {};
-    }
+  get '#composing'() {
+    return {};
+  }
 
-    get install() {
-      return {};
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get end() {
-      return {};
-    }
-  };
+  get '#writing'() {
+    return {
+      renderTemplates () {
+        this.renderTemplate('(.)?*', '');
+      }
+    };
+  }
+
+  get '#postWriting'() {
+    return {
+      packageJson() {
+        this.packageJson.merge({});
+      }
+    };
+  }
+
+  get '#install'() {
+    return {};
+  }
+
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

@@ -1,26 +1,25 @@
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+import path, { dirname } from 'path';
+import assert from 'yeoman-assert';
+import helpers from 'yeoman-test';
+
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('@mshima/node-package:app', () => {
   let ctx;
 
   beforeEach(() => {
     ctx = helpers
-      .create(
-        '@mshima/node-package:app',
-        {},
-        {experimental: true}
-      )
+      .create('@mshima/node-package:app')
       .withOptions({
-        disableLicense: true
+        enableGit: true,
+        enableGenerator: true,
       })
       .withPrompts({
-        name: 'generator-test'
+        name: 'generator-test',
       })
-      .withLookups([
-        {npmPaths: path.join(__dirname, '..', '..')}
-      ])
+      .withLookups([{ npmPaths: path.join(__dirname, '..', '..') }])
       .build();
   });
 
@@ -33,7 +32,7 @@ describe('@mshima/node-package:app', () => {
       return ctx.run();
     });
 
-    it('doesn\'t fails', () => {
+    it("doesn't fails", () => {
       assert(true);
     });
 
@@ -47,10 +46,6 @@ describe('@mshima/node-package:app', () => {
 
     it('writes .gitignore file', () => {
       assert.file(path.join(ctx.targetDirectory, '.gitignore'));
-    });
-
-    it('writes .xo-config.json file', () => {
-      assert.file(path.join(ctx.targetDirectory, '.xo-config.json'));
     });
 
     it('writes generators/app/index.js file', () => {

@@ -1,0 +1,26 @@
+{
+  "@mshima/generator-node-package": {},
+  "@mshima/generator-package-json": {
+    "scope": "mshima",
+    "name": "generator-regenerate",
+    "description": "Utilities for reproducibility.",
+    "homepage": "",
+    "keywords": null
+  },
+  "@mshima/generator-generator": {
+    "yeomanEnvironmentVersion": "3.3.0",
+    "yeomanTestVersion": "6.0.0",
+    "packageNamespace": "regenerate",
+    ":generator": {
+      "#app": {
+        "yeomanEnvironmentVersion": "3.3.0",
+        "name": "app"
+      }
+    }
+  },
+  "@mshima/generator-regenerate": {
+    "with": {
+      "@mshima/node-package:app": true
+    }
+  }
+}

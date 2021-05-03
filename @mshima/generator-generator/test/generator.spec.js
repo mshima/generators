@@ -1,36 +1,33 @@
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
-const {createEnv} = require('yeoman-environment');
+import path, { dirname } from 'path';
+import helpers from 'yeoman-test';
+
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('@mshima/generator:generator', () => {
-  let ctx;
+  let runContext;
+  let runResult;
 
-  beforeEach(() => {
-    ctx = helpers
-      .create(
-        '@mshima/generator:generator#app',
-        {},
-        {experimental: true, createEnv}
-      )
-      .withLookups([
-        {npmPaths: path.join(__dirname, '..', '..')}
-      ])
+  beforeEach(async () => {
+    runContext = helpers
+      .create('@mshima/generator:generator#app', {}, { experimental: true })
+      .withLookups([{ npmPaths: path.join(__dirname, '..', '..') }])
       .withArguments(['app'])
       .build();
   });
 
   afterEach(() => {
-    ctx.cleanTestDirectory();
+    runContext.cleanTestDirectory();
   });
 
   describe('Default test', () => {
-    beforeEach(() => {
-      return ctx.run();
+    beforeEach(async () => {
+      runResult = await runContext.run();
     });
 
     it('writes app generator file', () => {
-      assert.file(path.join(ctx.targetDirectory, 'generators/app/index.js'));
+      runResult.assertFile(path.join(runContext.targetDirectory, 'generators/app/index.js'));
     });
   });
 });

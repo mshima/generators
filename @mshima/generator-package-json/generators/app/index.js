@@ -1,4 +1,4 @@
-const path = require('path');
+import path from 'path';
 
 const BASE_STRUCTURE = {
   sort: false,
@@ -13,65 +13,35 @@ const BASE_STRUCTURE = {
     author: {
       name: undefined,
       email: undefined,
-      url: undefined
+      url: undefined,
     },
     files: undefined,
     main: undefined,
     repository: {
       type: undefined,
-      url: undefined
+      url: undefined,
     },
     dependencies: {},
     optionalDependencies: {},
     peerDependencies: {},
     devDependencies: {},
-    scripts: {}
-  }
+    scripts: {},
+  },
 };
 
-const PROMPTS = [
-  {
-    name: 'scope',
-    message: 'Do you want to set a scope?'
-  },
-  {
-    name: 'name',
-    message: 'What the module name?',
-    default: path.basename(process.cwd())
-  },
-  {
-    name: 'description',
-    message: 'Description'
-  },
-  {
-    name: 'homepage',
-    message: 'Project homepage url'
-  },
-  {
-    name: 'keywords',
-    message: 'Package keywords (comma to split)',
-    filter(words) {
-      if (!words) {
-        return null;
-      }
+export async function createGenerator(env) {
+  const ParentClass = await env.requireGenerator('@mshima/json:app');
+  return class PackageJsonGenerator extends ParentClass {
+    constructor(args, options, features) {
+      super(args, options, features);
 
-      return words.split(/\s*,\s*/g);
-    }
-  }
-];
-
-function createGenerator(env) {
-  return class PackageJsonGenerator extends env.requireGenerator('@mshima/json:app') {
-    constructor(args, options) {
-      super(args, options);
-
-      this.checkEnvironmentVersion('2.10.2');
+      this.checkEnvironmentVersion('3.3.0');
 
       this.packageJsonPath = this.destinationPath('package.json');
       this.packageJsonConfig = this.createStorage(this.packageJsonPath);
     }
 
-    get initializing() {
+    get '#initializing'() {
       return {
         composeContext() {
           if (this.compose) {
@@ -89,102 +59,122 @@ function createGenerator(env) {
         },
         licenseApp() {
           return this.compose.with('@mshima/license:app');
-        }
+        },
       };
     }
 
-    get prompting() {
+    get '#prompting'() {
       return {
         prompts() {
-          return this.prompt(PROMPTS, this.config);
-        }
+          return this.prompt(
+            [
+              {
+                name: 'scope',
+                message: 'Do you want to set a scope?',
+              },
+              {
+                name: 'name',
+                message: 'What the module name?',
+                default: () => path.basename(this.destinationRoot()),
+              },
+              {
+                name: 'description',
+                message: 'Description',
+              },
+              {
+                name: 'homepage',
+                message: 'Project homepage url',
+              },
+              {
+                name: 'keywords',
+                message: 'Package keywords (comma to split)',
+                filter(words) {
+                  if (!words) {
+                    return null;
+                  }
+
+                  return words.split(/\s*,\s*/g);
+                },
+              },
+            ],
+            this.config
+          );
+        },
       };
     }
 
-    get configuring() {
+    get '#configuring'() {
       return {};
     }
 
-    get default() {
+    get '#default'() {
       return {
-        packageJson() {
+        async packageJson() {
           if (this.config.get('skipPackageJsonGeneration')) {
             return;
           }
 
-          this.packageJsonConfig.defaults({version: '0.0.0'});
+          this.packageJsonConfig.defaults({ version: '0.0.0' });
 
           const scope = this.config.get('scope');
           const name = this.config.get('name');
           const packageName = scope ? `@${scope}/${name}` : name;
           this.packageJsonConfig.set('name', packageName);
-          ['description', 'homepage', 'keywords'].forEach(prop => {
+          for (const prop of ['description', 'homepage', 'keywords']) {
             const value = this.config.getPath(prop);
             if (value === undefined || value === null || value === '') {
-              return;
+              continue;
             }
 
             this.packageJsonConfig.setPath(prop, value);
-          });
-
-          if (this.compose.api.author) {
-            ['name', 'email', 'url'].forEach(prop => {
-              const value = this.compose.api.author.config.getPath(prop);
-              if (value === undefined || value === null || value === '') {
-                return;
-              }
-
-              this.packageJsonConfig.setPath(`author.${prop}`, value);
-            });
           }
 
-          if (this.compose.api.license) {
-            const value = this.compose.api.license.config.getPath('license');
+          const authorGenerator = await this.compose.get('@mshima/author:app');
+          if (authorGenerator) {
+            for (const prop of ['name', 'email', 'url']) {
+              const value = authorGenerator.config.getPath(prop);
+              if (value === undefined || value === null || value === '') {
+                continue;
+              }
+
+              this.packageJson.setPath(`author.${prop}`, value);
+            }
+          }
+
+          const licenseGenerator = await this.compose.get('@mshima/license:app');
+          if (licenseGenerator) {
+            const value = licenseGenerator.config.getPath('license');
             if (value === undefined || value === null || value === '') {
               return;
             }
 
-            this.packageJsonConfig.setPath('license', value);
+            this.packageJson.setPath('license', value);
           }
         },
         composing() {
           this._formatJson('package.json', BASE_STRUCTURE);
-        }
+        },
       };
     }
 
-    get writing() {
+    get '#writing'() {
       return super.writing;
     }
 
-    get install() {
+    get '#install'() {
       return {};
     }
 
-    get end() {
+    get '#end'() {
       return {};
     }
 
-    '#addDependency'(packageName, version) {
-      this._addToObject('dependencies', packageName, version);
-    }
-
-    '#addPeerDependency'(packageName, version) {
+    addPeerDependency(packageName, version) {
       this._addToObject('peerDependencies', packageName, version);
     }
 
-    '#addDevDependency'(packageName, version) {
-      this.compose.if('@mshima/lerna:child', () => {}, () => {
-        this._addToObject('devDependencies', packageName, version);
-      });
-    }
-
-    '#addScript'(key, value) {
-      this._addToObject('scripts', key, value);
-    }
-
-    '#addFile'(file) {
-      this._addToArray('files', file);
+    getScope() {
+      return this.config.get('scope');
     }
 
     _addToObject(name, key, value) {
@@ -199,17 +189,9 @@ function createGenerator(env) {
     _addToArray(key, value) {
       value = Array.isArray(value) ? value : [value];
       let values = this.packageJsonConfig.getPath(key);
-      if (values) {
-        values = [...new Set(values.concat(value))];
-      } else {
-        values = value;
-      }
+      values = values ? [...new Set(values.concat(value))] : value;
 
       this.packageJsonConfig.setPath(key, values);
     }
   };
 }
-
-module.exports = {
-  createGenerator
-};

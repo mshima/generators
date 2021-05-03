@@ -1,21 +1,18 @@
-'use strict';
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+import path, { dirname } from 'path';
+import assert from 'yeoman-assert';
+import helpers from 'yeoman-test';
+
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('license:app', () => {
   let ctx;
 
   beforeEach(() => {
     ctx = helpers
-      .create(
-        '@mshima/license:app',
-        {},
-        {experimental: true}
-      )
-      .withLookups([
-        {npmPaths: path.join(__dirname, '..', '..')}
-      ]);
+      .create('@mshima/license:app', {}, { experimental: true })
+      .withLookups([{ npmPaths: path.join(__dirname, '..', '..') }]);
   });
 
   afterEach(() => {
@@ -28,7 +25,7 @@ describe('license:app', () => {
         license: 'ISC',
         name: 'Rick',
         email: 'foo@example.com',
-        url: 'http://example.com'
+        url: 'http://example.com',
       })
       .run()
       .then(() => {
@@ -40,14 +37,14 @@ describe('license:app', () => {
   it('--output change the destination directory', () => {
     return ctx
       .withOptions({
-        output: 'src/license.txt'
+        output: 'src/license.txt',
       })
       .withPrompts({
         name: 'Rick',
         email: 'foo@example.com',
         year: '2015',
         website: 'http://example.com',
-        license: 'GPL-3.0'
+        license: 'GPL-3.0',
       })
       .run()
       .then(() => {

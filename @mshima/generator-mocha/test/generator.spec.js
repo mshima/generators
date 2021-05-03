@@ -1,22 +1,20 @@
-const path = require('path');
-const assert = require('yeoman-assert');
-const helpers = require('yeoman-test');
+import path, { dirname } from 'path';
+import assert from 'yeoman-assert';
+import helpers from 'yeoman-test';
+
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('@mshima/mocha:generator', () => {
   let ctx;
 
   beforeEach(() => {
     ctx = helpers
-      .create(
-        '@mshima/mocha:generator#app',
-        {},
-        {experimental: true}
-      )
-      .withLookups([
-        {npmPaths: path.join(__dirname, '..', '..')}
-      ])
+      .create('@mshima/mocha:generator#app', {}, { experimental: true })
+      .withLookups([{ npmPaths: path.join(__dirname, '..', '..') }])
       .withLocalConfig({
-        packageNamespace: 'foo'
+        packageNamespace: 'foo',
       })
       .withArguments(['app'])
       .build();

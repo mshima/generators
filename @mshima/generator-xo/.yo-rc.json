@@ -8,21 +8,15 @@
     ":generator": {
       "#app": {
         "className": "AppGenerator",
-        "files": [
-          ".xo-config.json"
-        ],
+        "files": [".xo-config.json"],
         "name": "app",
-        "yeomanEnvironmentVersion": "2.10.2"
+        "yeomanEnvironmentVersion": "3.3.0"
       }
     },
     "packageNamespace": "xo",
-    "yeomanEnvironmentVersion": "2.10.2",
+    "yeomanEnvironmentVersion": "3.3.0",
     "yeomanGeneratorVersion": "4.10.0",
-    "yeomanTestVersion": "2.5.0"
-  },
-  "@mshima/generator-license": {
-    "disableLicenseFileGeneration": true,
-    "license": "MIT"
+    "yeomanTestVersion": "6.0.0"
   },
   "@mshima/generator-mocha": {
     ":generator": {
@@ -32,18 +26,19 @@
       }
     }
   },
-  "@mshima/generator-node-package": {
-    "disableReadme": true,
-    "enableGenerator": true,
-    "enableMocha": true
-  },
+  "@mshima/generator-node-package": {},
   "@mshima/generator-package-json": {
     "description": "",
     "homepage": "https://github.com/mshima/generators",
-    "keywords": [
-      "yeoman-generator"
-    ],
+    "keywords": ["yeoman-generator"],
     "name": "generator-xo",
     "scope": "mshima"
+  },
+  "@mshima/generator-regenerate": {
+    "with": {
+      "@mshima/node-package:app": true,
+      "@mshima/mocha:app": true,
+      "@mshima/generator:app": true
+    }
   }
 }

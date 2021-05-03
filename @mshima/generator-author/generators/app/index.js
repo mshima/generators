@@ -1,96 +1,92 @@
 const PROMPTS = [
   {
     name: 'name',
-    message: 'Author\'s Name',
-    store: true
+    message: "Author's Name",
+    store: true,
   },
   {
     name: 'email',
-    message: 'Author\'s Email',
-    store: true
+    message: "Author's Email",
+    store: true,
   },
   {
     name: 'url',
-    message: 'Author\'s Homepage',
-    store: true
-  }
+    message: "Author's Homepage",
+    store: true,
+  },
 ];
 
-function createGenerator(env) {
-  return class AuthorAppGenerator extends require('@mshima/generator') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+import ParentGenerator from '@mshima/yeoman-generator-defaults';
 
-      this.option('name', {
-        type: String,
-        desc: 'Author\'s Name',
-        required: false
-      });
-      this.option('email', {
-        type: String,
-        desc: 'Author\'s Email',
-        required: false
-      });
-      this.option('url', {
-        type: String,
-        desc: 'Author\'s Homepage',
-        required: false
-      });
+export default class AuthorAppGenerator extends ParentGenerator {
+  constructor(args, options, features) {
+    super(args, options, { uniqueGlobally: true, features });
+    this.checkEnvironmentVersion('3.3.0');
 
-      ['name', 'email', 'url'].forEach(option => {
-        const value = this.options[option];
-        if (value !== undefined) {
-          this.config.set(option, value);
+    this.option('name', {
+      type: String,
+      desc: "Author's Name",
+      required: false,
+    });
+    this.option('email', {
+      type: String,
+      desc: "Author's Email",
+      required: false,
+    });
+    this.option('url', {
+      type: String,
+      desc: "Author's Homepage",
+      required: false,
+    });
+
+    for (const option of ['name', 'email', 'url']) {
+      const value = this.options[option];
+      if (value !== undefined) {
+        this.config.set(option, value);
+      }
+    }
+  }
+
+  get '#initializing'() {
+    return {
+      composeContext() {
+        if (this.compose) {
+          return;
         }
-      });
-    }
 
-    get initializing() {
-      return {
-        composeContext() {
-          if (this.compose) {
-            return;
-          }
-
-          if (this.env._rootGenerator && this.env._rootGenerator !== this) {
-            throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
-          }
-
-          this.compose = this.env.createCompose(this.destinationRoot());
-        },
-        prompts() {
-          return this.prompt(PROMPTS, this.config);
+        if (this.env._rootGenerator && this.env._rootGenerator !== this) {
+          throw new Error(`Generator ${this.options.namespace} requires experimental composing enabled`);
         }
-      };
-    }
 
-    get prompting() {
-      return {};
-    }
+        this.compose = this.env.createCompose(this.destinationRoot());
+      },
+      prompts() {
+        return this.prompt(PROMPTS, this.config);
+      },
+    };
+  }
 
-    get configuring() {
-      return {};
-    }
+  get '#prompting'() {
+    return {};
+  }
 
-    get default() {
-      return {};
-    }
+  get '#configuring'() {
+    return {};
+  }
 
-    get writing() {
-      return {};
-    }
+  get '#default'() {
+    return {};
+  }
 
-    get install() {
-      return {};
-    }
+  get '#writing'() {
+    return {};
+  }
 
-    get end() {
-      return {};
-    }
-  };
+  get '#install'() {
+    return {};
+  }
+
+  get '#end'() {
+    return {};
+  }
 }
-
-module.exports = {
-  createGenerator
-};

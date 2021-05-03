@@ -1,11 +1,12 @@
-function createGenerator(env) {
-  return class JsonYoRcGenerator extends env.requireGenerator('@mshima/json:app') {
-    constructor(args, options) {
-      super(args, options);
-      this.checkEnvironmentVersion('2.10.2');
+export async function createGenerator(env) {
+  const ParentClass = await env.requireGenerator('@mshima/json:app');
+  return class JsonYoRcGenerator extends ParentClass {
+    constructor(args, options, features) {
+      super(args, options, features);
+      this.checkEnvironmentVersion('3.3.0');
     }
 
-    get initializing() {
+    get '#initializing'() {
       return {
         composeContext() {
           if (this.compose) {
@@ -17,40 +18,36 @@ function createGenerator(env) {
           }
 
           this.compose = this.env.createCompose(this.destinationRoot());
-        }
+        },
       };
     }
 
-    get prompting() {
+    get '#prompting'() {
       return {};
     }
 
-    get configuring() {
+    get '#configuring'() {
       return {};
     }
 
-    get default() {
+    get '#default'() {
       return {
         yoRc() {
-          this._formatJson('.yo-rc.json', {sort: true});
-        }
+          this._formatJson('.yo-rc.json', { sort: true });
+        },
       };
     }
 
-    get writing() {
+    get '#writing'() {
       return super.writing;
     }
 
-    get install() {
+    get '#install'() {
       return {};
     }
 
-    get end() {
+    get '#end'() {
       return {};
     }
   };
 }
-
-module.exports = {
-  createGenerator
-};
